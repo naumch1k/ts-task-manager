@@ -1,3 +1,10 @@
+:root {
+  --color-primary-light: rgb(248 248 248);
+  --color-secondary-light: rgb(227 227 227);
+  --color-primary-dark: rgb(1 1 9);
+  --color-primary-dark-translucent: rgb(1 1 9 / 30%);
+}
+
 * {
   box-sizing: border-box;
 }
@@ -27,22 +34,30 @@ textarea {
   padding: 0.2rem 0.4rem;
   width: 100%;
   max-width: 30rem;
-  border: 1px solid #ccc;
+  border: unset;
+  border-bottom: 1px solid var(--color-primary-dark-translucent);
+  background-color: unset;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-primary-dark-translucent);
 }
 
 input:focus,
 textarea:focus {
   outline: none;
-  background: #fff5f9;
+  border-bottom: 1px solid var(--color-primary-dark);
 }
 
 button {
   font: inherit;
-  background: #ff0062;
-  border: 1px solid #ff0062;
+  color: var(--color-primary-dark);
+  background-color: transparent;
+  border: 1px solid var(--color-primary-dark);
   cursor: pointer;
-  color: white;
   padding: 0.75rem 1rem;
+  transition: color .5s, background-color .5s ease;
 }
 
 button:focus {
@@ -51,8 +66,8 @@ button:focus {
 
 button:hover,
 button:active {
-  background: #a80041;
-  border-color: #a80041;
+  background-color: var(--color-primary-dark);
+  color: var(--color-primary-light);
 }
 
 .projects {
@@ -122,6 +137,4 @@ button:active {
 #user-input {
   margin: 1rem;
   padding: 1rem;
-  border: 1px solid #ff0062;
-  background: #f7f7f7;
 }
