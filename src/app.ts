@@ -41,6 +41,35 @@ function autobind(
     return adjDescriptor;
 }
 
+class TaskList {
+    templateElement: HTMLTemplateElement;
+    hostElement: HTMLDivElement;
+    element: HTMLElement;
+
+    constructor(private status: 'todo' | 'doing' | 'done') {
+        this.templateElement = document.getElementById('task-list') as HTMLTemplateElement;
+        this.hostElement = document.getElementById('app') as HTMLDivElement;
+
+        const importedNode = document.importNode(this.templateElement.content, true);
+        this.element = importedNode.firstElementChild as HTMLElement;
+        this.element.id = `${this.status}-tasks`;
+
+        this.attach();
+        this.renderContent();
+    }
+
+    private renderContent() {
+        const listId = `${this.status}-tasks-list`;
+        this.element.querySelector('ul')!.id = listId;
+        // TODO: capitalize first letter
+        this.element.querySelector('h2')!.textContent = this.status;
+    }
+
+    private attach() {
+        this.hostElement.insertAdjacentElement('beforeend', this.element);
+    }
+}
+
 class TaskForm {
     templateElement: HTMLTemplateElement;
     hostElement: HTMLDivElement;
@@ -119,3 +148,6 @@ class TaskForm {
 }
 
 const taskForm = new TaskForm();
+const toDoTaskList = new TaskList('todo');
+const DoingTaskList = new TaskList('doing');
+const DoneTaskList = new TaskList('done');

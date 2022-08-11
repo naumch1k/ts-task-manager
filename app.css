@@ -17,15 +17,15 @@ body {
   margin: 0;
 }
 
-label,
+#app {display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 10px;
+}
+
 input,
 textarea {
   display: block;
   margin: 0.5rem 0;
-}
-
-label {
-  font-weight: bold;
 }
 
 input,
@@ -70,30 +70,38 @@ button:active {
   color: var(--color-primary-light);
 }
 
-.projects {
-  margin: 1rem;
-  border: 1px solid #ff0062;
+.tasks {
+  padding: 20px 0;
 }
 
-.projects header {
-  background: #ff0062;
-  height: 3.5rem;
-  display: flex;
-  justify-content: center;
+.tasks header {
+  padding: 0 5px;
+}
+
+.tasks h2 {
+  display: inline-flex;
   align-items: center;
+  height: 20px;
+  border-radius: 3px;
+  padding: 0 6px;
+  font-size: 14px;
+  line-height: 1.2;
+  margin: 0px;
 }
 
-#finished-projects {
-  border-color: #0044ff;
+#todo-tasks h2 {
+  color: rgb(93, 23, 21);
+  background: rgb(255, 226, 221);
 }
 
-#finished-projects header {
-  background: #0044ff;
+#doing-tasks h2 {
+  color: rgb(64, 44, 27);
+  background: rgb(253, 236, 200);
 }
 
-.projects h2 {
-  margin: 0;
-  color: white;
+#done-tasks h2 {
+  color: rgb(28, 56, 41);
+  background: rgb(219, 237, 219);
 }
 
 .projects ul {
