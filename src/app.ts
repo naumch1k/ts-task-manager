@@ -1,3 +1,20 @@
+// autobind decorator
+function autobind(
+    _: any,
+    _2:string,
+    descriptor: PropertyDescriptor
+) {
+    const originalMethod = descriptor.value;
+    const adjDescriptor: PropertyDescriptor = {
+        configurable: true,
+        get() {
+         const boundFn = originalMethod.bind(this);
+         return boundFn;
+        }
+    };
+    return adjDescriptor;
+}
+
 class TaskForm {
     templateElement: HTMLTemplateElement;
     hostElement: HTMLDivElement;
@@ -41,6 +58,7 @@ class TaskForm {
         this.descriptionInputElement.value = '';
     }
 
+    @autobind
     private submitHandler(event: Event) {
         event.preventDefault();
         const userInput = this.getUserInput();
@@ -53,8 +71,7 @@ class TaskForm {
     }
 
     private configure() {
-        // TODO: create autobind decorator
-        this.element.addEventListener('submit', this.submitHandler.bind(this));
+        this.element.addEventListener('submit', this.submitHandler);
     }
 
     private attach() {
