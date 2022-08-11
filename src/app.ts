@@ -1,3 +1,29 @@
+// validation
+interface Validatable {
+    value: string | number;
+    required?: boolean;
+    minLength?: number;
+    maxLength?: number;
+}
+
+function validate(validatableInput: Validatable) {
+    let isValid = true;
+
+    if (validatableInput.required) {
+        isValid = isValid && validatableInput.value.toString().trim().length !== 0;
+    }
+
+    if (validatableInput.minLength && typeof validatableInput.value === 'string') {
+        isValid = isValid && validatableInput.value.length >= validatableInput.minLength;
+    }
+
+    if (validatableInput.maxLength && typeof validatableInput.value === 'string') {
+        isValid = isValid && validatableInput.value.length <= validatableInput.maxLength;
+    }
+
+    return isValid;
+}
+
 // autobind decorator
 function autobind(
     _: any,
@@ -41,10 +67,23 @@ class TaskForm {
         const enteredTitle = this.titleInputElement.value;
         const enteredDescription = this.descriptionInputElement.value;
 
-        // TODO: improve validation
+        const titleValidatable: Validatable = {
+            value: enteredTitle,
+            required: true,
+            minLength: 2,
+            maxLength: 20,
+        }
+
+        const descriptionValidatable: Validatable = {
+            value: enteredDescription,
+            required: true,
+            minLength: 2,
+            maxLength: 50, 
+        }
+
         if (
-            enteredTitle.trim().length === 0 ||
-            enteredDescription.trim().length === 0
+            !validate(titleValidatable) ||
+            !validate(descriptionValidatable)
         ) {
             alert('Invalid input, please try again');
             return;
