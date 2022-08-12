@@ -114,7 +114,20 @@ class TaskList {
         this.element.id = `${this.status}-tasks`;
 
         tasksState.addListener((tasks: Task[]) => {
-            this.assignedTasks = tasks;
+            const filteredTasks = tasks.filter(task => {
+                if (this.status === 'todo') { 
+                    return task.status === TaskStatus.Todo;
+                }
+                if (this.status === 'doing') {
+                    return task.status === TaskStatus.Doing;
+                }
+                if (this.status === 'done') {
+                    return task.status === TaskStatus.Done;
+                }
+                return;
+            });
+
+            this.assignedTasks = filteredTasks;
             this.renderTasks();
         });
 
