@@ -1,7 +1,25 @@
+// Task Type
+enum TaskStatus {
+    Todo,
+    Doing,
+    Done,
+}
+
+class Task {
+    constructor(
+        public id: string,
+        public title: string,
+        public description: string,
+        public status: TaskStatus,
+    ) {}
+}
+
 // state management
+type Listener = (items: Task[]) => void;
+
 class TasksState {
-    private listeners: any[] = [];
-    private tasks: any[] = [];
+    private listeners: Listener[] = [];
+    private tasks: Task[] = [];
     private static instance: TasksState;
 
     private constructor() {
@@ -15,16 +33,17 @@ class TasksState {
         return this.instance; 
     }
 
-    addListener(listenerFn: Function) {
+    addListener(listenerFn: Listener) {
         this.listeners.push(listenerFn);
     }
 
     addTask(title: string, description: string) {
-        const newTask = {
-            id: Math.random().toString(),
-            title: title,
-            description: description,
-        };
+        const newTask = new Task(
+            Math.random().toString(),
+            title,
+            description,
+            TaskStatus.Todo,
+        );
 
         this.tasks.push(newTask);
 
@@ -83,7 +102,7 @@ class TaskList {
     templateElement: HTMLTemplateElement;
     hostElement: HTMLDivElement;
     element: HTMLElement;
-    assignedTasks: any[];
+    assignedTasks: Task[];
 
     constructor(private status: 'todo' | 'doing' | 'done') {
         this.templateElement = document.getElementById('task-list') as HTMLTemplateElement;
@@ -94,7 +113,7 @@ class TaskList {
         this.element = importedNode.firstElementChild as HTMLElement;
         this.element.id = `${this.status}-tasks`;
 
-        tasksState.addListener((tasks: any[]) => {
+        tasksState.addListener((tasks: Task[]) => {
             this.assignedTasks = tasks;
             this.renderTasks();
         });
