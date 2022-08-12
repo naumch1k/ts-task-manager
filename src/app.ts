@@ -204,5 +204,5 @@ class TaskForm {
 
 const taskForm = new TaskForm();
 const toDoTaskList = new TaskList('todo');
-const DoingTaskList = new TaskList('doing');
-const DoneTaskList = new TaskList('done');
+const doingTaskList = new TaskList('doing');
+const doneTaskList = new TaskList('done');
