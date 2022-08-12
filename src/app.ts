@@ -136,7 +136,9 @@ class TaskList {
     }
 
     private renderTasks() {
-       const listEl = document.getElementById(`${this.status}-tasks-list`) as HTMLUListElement;
+        const listEl = document.getElementById(`${this.status}-tasks-list`) as HTMLUListElement;
+
+        listEl.innerHTML = '';
 
         for (const task of this.assignedTasks) {
             const listItem = document.createElement('li');
