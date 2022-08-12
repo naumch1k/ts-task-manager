@@ -19,7 +19,7 @@ body {
 
 #app {display: grid;
   grid-template-columns: repeat(4, 1fr);
-  column-gap: 10px;
+  column-gap: 20px;
 }
 
 input,
@@ -75,7 +75,7 @@ button:active {
 }
 
 .tasks header {
-  padding: 0 5px;
+  padding: 5px;
 }
 
 .tasks h2 {
@@ -104,19 +104,20 @@ button:active {
   background: rgb(219, 237, 219);
 }
 
-.projects ul {
+.tasks ul {
   list-style: none;
   margin: 0;
+  padding: 0;
+}
+
+.tasks li {
+  border-radius: 4px;
+  margin-bottom: 5px;
+  box-shadow: rgb(15 15 15 / 10%) 0px 0px 0px 1px, rgb(15 15 15 / 10%) 0px 2px 4px;
   padding: 1rem;
 }
 
-.projects li {
-  box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.26);
-  padding: 1rem;
-  margin: 1rem;
-}
-
-.projects li h2 {
+.tasks li h2 {
   color: #ff0062;
   margin: 0.5rem 0;
 }
@@ -125,12 +126,12 @@ button:active {
   color: #0044ff;
 }
 
-.projects li h3 {
+.tasks li h3 {
   color: #575757;
   font-size: 1rem;
 }
 
-.project li p {
+.task li p {
   margin: 0;
 }
 
