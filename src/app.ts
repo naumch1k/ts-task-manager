@@ -1,3 +1,41 @@
+// state management
+class TasksState {
+    private listeners: any[] = [];
+    private tasks: any[] = [];
+    private static instance: TasksState;
+
+    private constructor() {
+
+    }
+
+    static getInstance() {
+        if (this.instance) this.instance; 
+
+        this.instance = new TasksState;
+        return this.instance; 
+    }
+
+    addListener(listenerFn: Function) {
+        this.listeners.push(listenerFn);
+    }
+
+    addTask(title: string, description: string) {
+        const newTask = {
+            id: Math.random().toString(),
+            title: title,
+            description: description,
+        };
+
+        this.tasks.push(newTask);
+
+        for (const listenerFn of this.listeners) {
+            listenerFn(this.tasks.slice());
+        }
+    }
+}
+
+const tasksState = TasksState.getInstance();
+
 // validation
 interface Validatable {
     value: string | number;
@@ -45,17 +83,34 @@ class TaskList {
     templateElement: HTMLTemplateElement;
     hostElement: HTMLDivElement;
     element: HTMLElement;
+    assignedTasks: any[];
 
     constructor(private status: 'todo' | 'doing' | 'done') {
         this.templateElement = document.getElementById('task-list') as HTMLTemplateElement;
         this.hostElement = document.getElementById('app') as HTMLDivElement;
+        this.assignedTasks = [];
 
         const importedNode = document.importNode(this.templateElement.content, true);
         this.element = importedNode.firstElementChild as HTMLElement;
         this.element.id = `${this.status}-tasks`;
 
+        tasksState.addListener((tasks: any[]) => {
+            this.assignedTasks = tasks;
+            this.renderTasks();
+        });
+
         this.attach();
         this.renderContent();
+    }
+
+    private renderTasks() {
+       const listEl = document.getElementById(`${this.status}-tasks-list`) as HTMLUListElement;
+
+        for (const task of this.assignedTasks) {
+            const listItem = document.createElement('li');
+            listItem.textContent = task.title;
+            listEl.appendChild(listItem);
+        }
     }
 
     private renderContent() {
@@ -133,7 +188,7 @@ class TaskForm {
 
         if (Array.isArray(userInput)) {
             const [title, description] = userInput;
-            console.log(title, description);
+            tasksState.addTask(title, description);
             this.clearForm();
         }
     }
