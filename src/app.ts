@@ -128,6 +128,25 @@ abstract  class Component<T extends HTMLElement, U extends HTMLElement> {
     abstract renderContent(): void;
 }
 
+class TaskItem extends Component<HTMLUListElement, HTMLLIElement> {
+    private task: Task;
+
+    constructor(hostId: string, task: Task) {
+        super('single-task', hostId, false, task.id);
+        this.task = task;
+
+        this.configure();
+        this.renderContent();
+    }
+
+    configure() {}
+
+    renderContent() {
+        this.element.querySelector('h3')!.textContent = this.task.title;
+        this.element.querySelector('p')!.textContent = this.task.description;
+    }
+}
+
 class TaskList extends Component<HTMLDivElement, HTMLElement> {
     assignedTasks: Task[];
 
@@ -173,9 +192,7 @@ class TaskList extends Component<HTMLDivElement, HTMLElement> {
         listEl.innerHTML = '';
 
         for (const task of this.assignedTasks) {
-            const listItem = document.createElement('li');
-            listItem.textContent = task.title;
-            listEl.appendChild(listItem);
+            new TaskItem(this.element.querySelector('ul')!.id, task);
         }
     }
 }
