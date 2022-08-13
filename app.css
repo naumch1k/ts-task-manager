@@ -103,6 +103,12 @@ button:active {
   margin: 0px;
 }
 
+.tasks span {
+  padding: 4px 8px;
+  color: var(--color-primary-dark-translucent);
+  font-size: 14px;
+}
+
 #todo-tasks h2 {
   color: rgb(93, 23, 21);
   background: rgb(255, 226, 221);

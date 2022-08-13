@@ -256,12 +256,14 @@ class TaskList extends Component<HTMLDivElement, HTMLElement> implements DragTar
         this.element.querySelector('ul')!.id = listId;
         // TODO: capitalize first letter
         this.element.querySelector('h2')!.textContent = this.status;
+        this.element.querySelector('span')!.textContent = this.assignedTasks.length.toString();
     }
 
     private renderTasks() {
         const listEl = document.getElementById(`${this.status}-tasks-list`) as HTMLUListElement;
 
         listEl.innerHTML = '';
+        this.element.querySelector('span')!.textContent = this.assignedTasks.length.toString();
 
         for (const task of this.assignedTasks) {
             new TaskItem(this.element.querySelector('ul')!.id, task);
