@@ -1,3 +1,15 @@
+// drag & drop interfaces
+interface Draggable {
+    dragStartHandler(event: DragEvent): void;
+    dragEndHandler(event: DragEvent): void;
+}
+
+interface DragTarget {
+    dragOverHandler(event: DragEvent): void;
+    dropHandler(event: DragEvent): void;
+    dragLeaveHandler(event: DragEvent): void;
+}
+
 // Task Type
 enum TaskStatus {
     Todo,
@@ -44,7 +56,18 @@ class TasksState {
         );
 
         this.tasks.push(newTask);
+        this.updateListeners();
+    }
 
+    moveTask(taskId: string, newStatus: TaskStatus) {
+        const task = this.tasks.find(task => task.id === taskId);
+        if (task && task.status !== newStatus) {
+            task.status = newStatus;
+            this.updateListeners();
+        }
+    }
+
+    private updateListeners() {        
         for (const listenerFn of this.listeners) {
             listenerFn(this.tasks.slice());
         }
@@ -128,7 +151,7 @@ abstract  class Component<T extends HTMLElement, U extends HTMLElement> {
     abstract renderContent(): void;
 }
 
-class TaskItem extends Component<HTMLUListElement, HTMLLIElement> {
+class TaskItem extends Component<HTMLUListElement, HTMLLIElement> implements Draggable {
     private task: Task;
 
     constructor(hostId: string, task: Task) {
@@ -139,7 +162,18 @@ class TaskItem extends Component<HTMLUListElement, HTMLLIElement> {
         this.renderContent();
     }
 
-    configure() {}
+    @autobind
+    dragStartHandler(event: DragEvent) {
+        event.dataTransfer!.setData('text/plain', this.task.id);
+        event.dataTransfer!.effectAllowed = 'move';
+    }
+
+    dragEndHandler(_: DragEvent) {}
+
+    configure() {
+        this.element.addEventListener('dragstart', this.dragStartHandler);
+        this.element.addEventListener('dragend', this.dragEndHandler);
+    }
 
     renderContent() {
         this.element.querySelector('h3')!.textContent = this.task.title;
@@ -147,7 +181,7 @@ class TaskItem extends Component<HTMLUListElement, HTMLLIElement> {
     }
 }
 
-class TaskList extends Component<HTMLDivElement, HTMLElement> {
+class TaskList extends Component<HTMLDivElement, HTMLElement> implements DragTarget {
     assignedTasks: Task[];
 
     constructor(private status: 'todo' | 'doing' | 'done') {
@@ -159,7 +193,45 @@ class TaskList extends Component<HTMLDivElement, HTMLElement> {
         this.renderContent();
     }
 
+    @autobind
+    dragOverHandler(event: DragEvent) {
+        if (event.dataTransfer && event.dataTransfer.types[0] === 'text/plain') {
+            event.preventDefault();
+
+            const listEl = this.element.querySelector('ul')!;
+            listEl.classList.add('droppable');
+        }
+    }
+    
+    @autobind
+    dropHandler(event: DragEvent) {
+        const taskId = event.dataTransfer!.getData('text/plain');
+
+        tasksState.moveTask(
+            taskId,
+            this.status === 'todo'
+                ? TaskStatus.Todo
+                : this.status === 'doing'
+                    ? TaskStatus.Doing
+                    : TaskStatus.Done
+        );
+
+        const listElements = this.element.querySelectorAll('ul')!;
+        listElements.forEach(element => element.classList.remove('droppable'))
+    }
+
+    @autobind
+    dragLeaveHandler(_: DragEvent) {
+        const listElements = this.element.querySelectorAll('ul')!;
+        listElements.forEach(element => element.classList.remove('droppable'))
+        
+    }
+
     configure() {
+        this.element.addEventListener('dragover', this.dragOverHandler);
+        this.element.addEventListener('drop', this.dropHandler);
+        this.element.addEventListener('dragleave', this.dragLeaveHandler);
+
         tasksState.addListener((tasks: Task[]) => {
             const filteredTasks = tasks.filter(task => {
                 if (this.status === 'todo') { 
