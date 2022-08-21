@@ -1,5 +1,5 @@
-import { TaskForm } from './components/task-form.js';
-import { TaskList } from './components/task-list.js';
+import { TaskForm } from './components/task-form';
+import { TaskList } from './components/task-list';
 
 new TaskForm();
 new TaskList('todo');

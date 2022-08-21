@@ -1,10 +1,9 @@
-import { Component } from './base-component.js'
-import { TaskItem } from './task-item.js';
-import { autobind } from '../decorators/autobind.js';
-import { tasksState } from '../state/task.js';
-import { Task, TaskStatus } from '../models/task.js';
-import { DragTarget } from '../models/drag-drop.js';
-
+import { Component } from './base-component';
+import { TaskItem } from './task-item';
+import { autobind } from '../decorators/autobind';
+import { tasksState } from '../state/task';
+import { Task, TaskStatus } from '../models/task';
+import { DragTarget } from '../models/drag-drop';
 
 export class TaskList extends Component<HTMLDivElement, HTMLElement> implements DragTarget {
     assignedTasks: Task[];
