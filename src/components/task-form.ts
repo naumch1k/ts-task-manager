@@ -1,4 +1,8 @@
 /// <reference path='base-component.ts' />
+/// <reference path='../decorators/autobind.ts' />
+/// <reference path='../utils/validation.ts' />
+/// <reference path='../state/task.ts' />
+
 
 namespace App {
     export class TaskForm extends Component<HTMLDivElement, HTMLFormElement> {
