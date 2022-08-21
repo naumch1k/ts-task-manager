@@ -1,9 +1,7 @@
-/// <reference path='components/task-form.ts' />
-/// <reference path='components/task-list.ts' />
+import { TaskForm } from './components/task-form.js';
+import { TaskList } from './components/task-list.js';
 
-namespace App {
-    new TaskForm();
-    new TaskList('todo');
-    new TaskList('doing');
-    new TaskList('done');
-}
+new TaskForm();
+new TaskList('todo');
+new TaskList('doing');
+new TaskList('done');

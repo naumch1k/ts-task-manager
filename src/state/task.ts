@@ -1,50 +1,51 @@
-namespace App {
-    type Listener = (items: Task[]) => void;
+import { Task, TaskStatus } from "../models/task.js";
 
-   export class TasksState {
-        private listeners: Listener[] = [];
-        private tasks: Task[] = [];
-        private static instance: TasksState;
+type Listener = (items: Task[]) => void;
 
-        private constructor() {}
+export class TasksState {
+    private listeners: Listener[] = [];
+    private tasks: Task[] = [];
+    private static instance: TasksState;
 
-        static getInstance() {
-            if (this.instance) this.instance; 
+     private constructor() {}
 
-            this.instance = new TasksState;
-            return this.instance; 
-        }
+     static getInstance() {
+        if (this.instance) this.instance; 
 
-        addListener(listenerFn: Listener) {
-            this.listeners.push(listenerFn);
-        }
+         this.instance = new TasksState;
+        return this.instance; 
+    }
 
-        addTask(title: string, description: string) {
-            const newTask = new Task(
-                Math.random().toString(),
-                title,
-                description,
-                TaskStatus.Todo,
-            );
+     addListener(listenerFn: Listener) {
+        this.listeners.push(listenerFn);
+    }
 
-            this.tasks.push(newTask);
+     addTask(title: string, description: string) {
+        const newTask = new Task(
+            Math.random().toString(),
+            title,
+            description,
+            TaskStatus.Todo,
+        );
+
+         this.tasks.push(newTask);
+        this.updateListeners();
+    }
+
+     moveTask(taskId: string, newStatus: TaskStatus) {
+        const task = this.tasks.find(task => task.id === taskId);
+        if (task && task.status !== newStatus) {
+            task.status = newStatus;
             this.updateListeners();
-        }
-
-        moveTask(taskId: string, newStatus: TaskStatus) {
-            const task = this.tasks.find(task => task.id === taskId);
-            if (task && task.status !== newStatus) {
-                task.status = newStatus;
-                this.updateListeners();
-            }
-        }
-
-        private updateListeners() {        
-            for (const listenerFn of this.listeners) {
-                listenerFn(this.tasks.slice());
-            }
         }
     }
 
-    export const tasksState = TasksState.getInstance();
+     private updateListeners() {        
+        for (const listenerFn of this.listeners) {
+            listenerFn(this.tasks.slice());
+        }
+    }
 }
+
+ export const tasksState = TasksState.getInstance();
+ 
